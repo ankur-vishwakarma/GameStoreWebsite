@@ -61,6 +61,11 @@ public class Game implements java.io.Serializable {
 
 	public Game() {
 	}
+	
+	public Game(int gameId) {
+		super();
+		this.gameId = gameId;
+	}
 
 	public Game(int gameId, Category category, String title, String creator, String description, String isbn,
 			byte[] image, float price, Date published, Date lastUpdateTime) {
