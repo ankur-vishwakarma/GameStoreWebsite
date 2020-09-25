@@ -50,6 +50,14 @@ public class ShoppingCart {
 		return total;
 	}
 	
+	public void updateCart(int[] gameIds,int[] quantities) {
+		for(int i=0;i<gameIds.length;i++) {
+			Game key=new Game(gameIds[i]);
+			Integer value =quantities[i];
+			cart.put(key, value);
+		}
+	}
+	
 	public void clear() {
 		cart.clear();
 	}

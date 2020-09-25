@@ -29,7 +29,7 @@
 				<td valign="top" rowspan="2" width="20%">
 					<h2>Rs.${game.price}</h2>
 					<br/><br/>
-					<button type="submit">Add to Cart</button>
+					<button id="buttonAddToCart" >Add to Cart</button>
 				</td>
 			</tr>
 			<tr>
@@ -82,6 +82,10 @@
 		$(document).ready(function(){
 			$("#buttonWriteReview").click(function() {
 				window.location = 'write_review?game_id=' + ${game.gameId};
+		    });
+			
+			$("#buttonAddToCart").click(function() {
+				window.location = 'add_to_cart?game_id=' + ${game.gameId};
 		    });
 		});
 	</script>

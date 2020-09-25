@@ -26,12 +26,12 @@
 		<c:set 	var="cart" value="${sessionScope['cart']}" />
 		
 		<c:if test="${cart.totalItems==0}">
-			<h2>No Items in Cart. Continue Shopping!</h2>
+			<h2>No Items in Cart. <a href="${pageContext.request.contextPath}/">Continue Shopping</a>!</h2>
 		</c:if>
 		
 		<c:if test="${cart.totalItems>0}">
-			<div>
-				<form>
+			<form action="update_cart" method="post" id="cartForm">
+				<div>
 					<table border="1">
 						<tr>
 							<th>No</th>
@@ -39,9 +39,7 @@
 							<th>Quantity</th>
 							<th>Price</th>
 							<th>Subtotal</th>
-							<th>
-								<a href=""><b>Clear Cart</b></a>
-							</th>
+							<th></th>
 						</tr>
 						
 						<c:forEach items="${cart.items}" var="item" varStatus="status">
@@ -53,10 +51,13 @@
 								<td>
 									<span id="game-title">${item.key.title}</span>
 								</td>
-								<td>${item.value}</td>
+								<td>    
+									<input type="hidden" name="gameId" value="${item.key.gameId}" />
+									<input type="text" name="quantity${status.index+1}" value="${item.value}" size="5" />
+								</td>
 								<td><fmt:formatNumber value="${item.key.price}" type="currency" /></td>
 								<td><fmt:formatNumber value="${item.value * item.key.price}" type="currency" /></td>
-								<td><a href="">Remove</a></td>
+								<td><a href="remove_from_cart?game_id=${item.key.gameId}">Remove</a></td>
 							</tr>
 						</c:forEach>
 						
@@ -69,34 +70,53 @@
 							<td colspan="2"><b><fmt:formatNumber value="${cart.totalAmount}" type="currency" /></b></td>
 						</tr>
 					</table>
-				</form>
-			</div>
+				</div>
+				<div>
+					<table class="normal">
+						<tr><td>&nbsp;</td></tr>
+						<tr>
+							<td></td>
+							<td><button type="submit">Update</button></td>
+							<td><input type="button" id="clearCart" value="Clear Cart" /></td>
+							<td><a href="${pageContext.request.contextPath}/">Continue Shopping</a></td>
+							<td><a href="">CheckOut</a></td>
+						</tr>
+					</table>
+				</div>
+			</form>
+			
 		</c:if>
 
 		
 	</div>
 	<jsp:directive.include file="footer.jsp" />
 </body>
-<script type="text/javascript">
+<script type="text/javascript" >
 
 	$(document).ready(function(){
-		$("#loginForm").validate({
+		
+		$("#clearCart").click(function(){
+			window.location= "clear_cart";
+		});
+		$("#cartForm").validate({
 			rules: {
-				email: {
-					 required: true,
-					 email: true
-				},
-				
-				password: "required",
+				<c:forEach items="${cart.items}" var="item" varStatus="status">
+					quantity${status.index+1} : {
+							required:true,
+							number:true,
+							min: 1
+						},
+				</c:forEach>
 			},
 			
 			messages: {
-				email: {
-					required: "Email is required!",
-					email: "Please enter a vald email address!"
-				},
-				
-				password: "Password is required!"
+				<c:forEach items="${cart.items}" var="item" varStatus="status">
+					quantity${status.index+1} : {
+							required: "Please Enter Quantity",
+							number: "Quantity must be a number",
+							min: "Quantity must be greater than 0"
+						},
+				</c:forEach>
 			}
 		});
 		

@@ -27,7 +27,7 @@ public class ViewCartServlet extends HttpServlet {
 			ShoppingCart shoppingCart=new ShoppingCart();
 			request.getSession().setAttribute("cart", shoppingCart);
 			
-			//testing
+			/*//testing
 			GameDAO gameDAO=new GameDAO();
 			Game game1=gameDAO.get(2);
 			Game game2=gameDAO.get(12);
@@ -38,7 +38,7 @@ public class ViewCartServlet extends HttpServlet {
 			shoppingCart.addItem(game2);
 			shoppingCart.addItem(game2);
 		
-			shoppingCart.addItem(game3);
+			shoppingCart.addItem(game3);*/
 		}
 		
 		
