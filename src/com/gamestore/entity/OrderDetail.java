@@ -18,9 +18,11 @@ import javax.persistence.Table;
 @Table(name = "order_detail", catalog = "gamestoredb")
 public class OrderDetail implements java.io.Serializable {
 
-	private OrderDetailId id;
+	private OrderDetailId id = new OrderDetailId();
 	private Game game;
 	private GameOrder gameOrder;
+	private int quantity;
+	private float subtotal;
 
 	public OrderDetail() {
 	}
@@ -29,18 +31,19 @@ public class OrderDetail implements java.io.Serializable {
 		this.id = id;
 	}
 
-	public OrderDetail(OrderDetailId id, Game game, GameOrder gameOrder) {
+	public OrderDetail(OrderDetailId id, Game game, GameOrder gameOrder,int quantity, float subtotal) {
 		this.id = id;
 		this.game = game;
 		this.gameOrder = gameOrder;
+		this.quantity=quantity;
+		this.subtotal=subtotal;
 	}
 
 	@EmbeddedId
 
-	@AttributeOverrides({ @AttributeOverride(name = "orderId", column = @Column(name = "order_id")),
-			@AttributeOverride(name = "gameId", column = @Column(name = "game_id")),
-			@AttributeOverride(name = "quantity", column = @Column(name = "quantity", nullable = false)),
-			@AttributeOverride(name = "subtotal", column = @Column(name = "subtotal", nullable = false, precision = 12, scale = 0)) })
+	@AttributeOverrides({ @AttributeOverride(name = "orderId", column = @Column(name = "order_id", nullable=false)),
+			@AttributeOverride(name = "gameId", column = @Column(name = "game_id", nullable=false))
+	})
 	public OrderDetailId getId() {
 		return this.id;
 	}
@@ -49,24 +52,44 @@ public class OrderDetail implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "game_id", insertable = false, updatable = false)
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "game_id", insertable = false, updatable = false, nullable=false)
 	public Game getGame() {
 		return this.game;
 	}
 
 	public void setGame(Game game) {
 		this.game = game;
+		this.id.setGame(game);
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "order_id", insertable = false, updatable = false)
+	@JoinColumn(name = "order_id", insertable = false, updatable = false, nullable=false)
 	public GameOrder getGameOrder() {
 		return this.gameOrder;
 	}
 
 	public void setGameOrder(GameOrder gameOrder) {
 		this.gameOrder = gameOrder;
+		this.id.setGameOrder(gameOrder);
+	}
+	
+	@Column(name = "quantity", nullable = false)
+	public int getQuantity() {
+		return this.quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+
+	@Column(name = "subtotal", nullable = false, precision = 12, scale = 0)
+	public float getSubtotal() {
+		return this.subtotal;
+	}
+
+	public void setSubtotal(float subtotal) {
+		this.subtotal = subtotal;
 	}
 
 }
