@@ -79,7 +79,7 @@
 							<td><button type="submit">Update</button></td>
 							<td><input type="button" id="clearCart" value="Clear Cart" /></td>
 							<td><a href="${pageContext.request.contextPath}/">Continue Shopping</a></td>
-							<td><a href="">CheckOut</a></td>
+							<td><a href="checkout">CheckOut</a></td>
 						</tr>
 					</table>
 				</div>

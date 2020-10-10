@@ -10,7 +10,6 @@ public class OrderDAO extends JpaDAO<GameOrder> implements GenericDAO<GameOrder>
 	@Override
 	public GameOrder create(GameOrder order) {
 		order.setOrderDate(new Date());
-		order.setPaymentMethod("Cash On Delivery");
 		order.setStatus("Processing");
 		return super.create(order);
 	}

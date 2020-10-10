@@ -35,8 +35,8 @@ public class ShoppingCart {
 		return total;
 	}
 	
-	public double getTotalAmount() {
-		double total=0;
+	public float getTotalAmount() {
+		float total=0.0f;
 		
 		Iterator <Game> iterator=cart.keySet().iterator();
 		
