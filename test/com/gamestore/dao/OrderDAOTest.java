@@ -2,6 +2,7 @@ package com.gamestore.dao;
 
 import static org.junit.Assert.*;
 
+import java.awt.print.Book;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -180,5 +181,40 @@ public class OrderDAOTest {
 		
 		assertEquals(3, totalOrders);
 	}
+	
+	@Test
+	public void testListByCustomerNoOrders() {
+		Integer customerId =99;
+		List <GameOrder> listOrders=orderDAO.listByCustomer(customerId);
+		
+		assertTrue(listOrders.isEmpty());
+	}
+	
+	@Test
+	public void testListByCustomerHaveOrders() {
+		Integer customerId =4;
+		List <GameOrder> listOrders=orderDAO.listByCustomer(customerId);
+		  
+		assertTrue(listOrders.size() > 0);
+	}
 
+	@Test
+	public void testGetByIdAndCustomerNull() {
+		Integer orderId=10;
+		Integer customerId =99;
+		
+		GameOrder order = orderDAO.get(orderId, customerId);
+		
+		assertNull(order);
+	}
+	
+	@Test
+	public void testGetByIdAndCustomerNotNull() {
+		Integer orderId=5;
+		Integer customerId =3;
+		
+		GameOrder order = orderDAO.get(orderId, customerId);
+		
+		assertNotNull(order);
+	}
 }

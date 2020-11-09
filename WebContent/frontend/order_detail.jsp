@@ -7,32 +7,36 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Manage Orders - Game store</title>
-<link rel="stylesheet" href="../css/style.css">
-<script type="text/javascript" src="../js/jquery-3.5.1.min.js"></script>
+<title>My Orders - Game store</title>
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 	<jsp:directive.include file="header.jsp" />
 	
-	<div align="center">
-		<h2 class="pageheading">Details of Order ID: ${order.orderId}</h2>
-	</div>
-	
-	<c:if test="${message != null}">
-	<div align="center">
-		<h4 class="message">${message}</h4>
-	</div>
+	<c:if test="${order==null }">
+		<div align="center">
+			<h2 class="pageheading">Sorry, You are not authorized to view this order.</h2>
+		</div>
 	</c:if>
 	
+	<c:if test="${order!=null }">
 	<div align="center">
-		<h2>Order Overview:</h2>
+		<h2 class="pageheading">Your Order ID: ${order.orderId}</h2>
+	</div>
+	
+	
+	<div align="center">
 		<table>
 			<tr>
-				<td><b>Ordered By: </b></td>
-				<td>${order.customer.fullname}</td>
+				<td><b>Order status: </b></td>
+				<td>${order.status}</td>
 			</tr>
 			<tr>
-				<td><b>Game Copies: </b></td>
+				<td><b>Order date: </b></td>
+				<td>${order.orderDate}</td>
+			</tr>
+			<tr>
+				<td><b>Quantity: </b></td>
 				<td>${order.gameCopies}</td>
 			</tr>
 			<tr>
@@ -48,20 +52,12 @@
 				<td>${order.recipientPhone}</td>
 			</tr>
 			<tr>
-				<td><b>Payment Method: </b></td>
-				<td>${order.paymentMethod}</td>
-			</tr>
-			<tr>
-				<td><b>Shipping Address: </b></td>
+				<td><b>Ship to: </b></td>
 				<td>${order.shippingAddress}</td>
 			</tr>
 			<tr>
-				<td><b>Order status: </b></td>
-				<td>${order.status}</td>
-			</tr>
-			<tr>
-				<td><b>Order date: </b></td>
-				<td>${order.orderDate}</td>
+				<td><b>Payment Method: </b></td>
+				<td>${order.paymentMethod}</td>
 			</tr>
 		</table>
 	</div>
@@ -69,8 +65,8 @@
 		<h2>Ordered Games</h2>
 		<table border="1">
 			<tr>
-				<th>Index</th>
-				<th>Game Title</th>
+				<th>No</th>
+				<th>Game</th>
 				<th>Creator</th>
 				<th>Price</th>
 				<th>Quantity</th>
@@ -97,26 +93,8 @@
 			</tr>
 		</table>
 	</div>
-	<br/>
-	<div align="center">
-		<a href="edit_order?id=${order.orderId}">Edit this Order</a>
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<a href="">Delete this Order</a>
-	</div>
+	</c:if>
 	
 	<jsp:directive.include file="footer.jsp" />
-	
-	<script>
-	$(document).ready(function(){
-		$(".deleteLink").each(function(){
-			$(this).on("click",function(){
-				reviewId=$(this).attr("id");
-				if(confirm('Are you sure you want to delete the review with ID '+ reviewId + ' ?')){
-					window.location='delete_review?id=' + reviewId;
-				}
-			});
-		});
-	});	
-	</script>
 </body>
 </html>

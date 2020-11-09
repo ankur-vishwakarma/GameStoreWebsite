@@ -29,7 +29,11 @@ import javax.persistence.Transient;
 @Table(name = "game_order", catalog = "gamestoredb")
 @NamedQueries({
 	@NamedQuery(name= "GameOrder.findAll", query = "SELECT go FROM GameOrder go ORDER BY go.orderDate DESC"),
-	@NamedQuery(name= "GameOrder.countAll", query= "SELECT COUNT(*) FROM GameOrder")
+	@NamedQuery(name= "GameOrder.countAll", query= "SELECT COUNT(*) FROM GameOrder"),
+	@NamedQuery(name= "GameOrder.findByCustomer", 
+		query="SELECT go FROM GameOrder go WHERE go.customer.customerId =:customerId ORDER BY go.orderDate DESC"),
+	@NamedQuery(name= "GameOrder.findByIdAndCustomer",
+		query="SELECT go FROM GameOrder go WHERE go.orderId =:orderId AND go.customer.customerId =:customerId")
 })
 public class GameOrder implements java.io.Serializable {
 
