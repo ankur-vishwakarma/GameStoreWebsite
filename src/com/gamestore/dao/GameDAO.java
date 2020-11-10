@@ -1,5 +1,6 @@
 package com.gamestore.dao;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -107,6 +108,25 @@ public class GameDAO extends JpaDAO<Game> implements GenericDAO<Game> {
 	
 	public long countByCategory(int categoryId) {
 		return super.countWithNamedQuery("Game.countByCategory", "catId", categoryId);
+	}
+	
+	public List<Game> listBestSellingGames(){
+		return super.findWithNamedQuery("OrderDetail.bestSelling", 0, 4);
+	}
+	
+	public List<Game> listMostFavoredGames(){
+		List<Game> mostFavoredGames=new ArrayList<>();
+		
+		List<Object[]> result = super.findWithNamedQueryObjects("Review.mostFavoredGames", 0, 4);
+		
+		if(!result.isEmpty()) {
+			for(Object[] elements: result) {
+				Game game= (Game) elements[0];
+				mostFavoredGames.add(game);
+			}
+		}
+		
+		return mostFavoredGames;
 	}
 
 }

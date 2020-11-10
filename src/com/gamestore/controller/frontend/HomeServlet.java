@@ -27,8 +27,13 @@ public class HomeServlet extends HttpServlet {
 		GameDAO gameDAO=new GameDAO();
 		
 		List<Game> listNewGames=gameDAO.listNewGames();
+		List<Game> listBestSellingGames=gameDAO.listBestSellingGames();
+		List<Game> listMostFavoredGames=gameDAO.listMostFavoredGames();
 		
 		request.setAttribute("listNewGames", listNewGames);
+		request.setAttribute("listBestSellingGames", listBestSellingGames);
+		request.setAttribute("listMostFavoredGames", listMostFavoredGames);
+
 		
 		String homepage= "frontend/index.jsp";
 		RequestDispatcher dispatcher = request.getRequestDispatcher(homepage);

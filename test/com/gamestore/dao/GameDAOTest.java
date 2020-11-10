@@ -204,4 +204,25 @@ public class GameDAOTest {
 		assertTrue(numOfGames == 6);
 	}
 	
+	@Test
+	public void testListBestSellingGames() {
+		List<Game> topBestSellingGames=gameDao.listBestSellingGames();
+		
+		for(Game game: topBestSellingGames ) {
+			System.out.println(game.getTitle());
+		}
+		
+		assertEquals(4, topBestSellingGames.size());
+	}
+	
+	@Test
+	public void testListMostFavoredGames() {
+		List<Game> topFavoredGames=gameDao.listMostFavoredGames();
+		
+		for(Game game: topFavoredGames ) {
+			System.out.println(game.getTitle());
+		}
+		
+		assertEquals(4, topFavoredGames.size());
+	}
 }
