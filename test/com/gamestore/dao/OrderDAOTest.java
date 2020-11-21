@@ -217,4 +217,11 @@ public class OrderDAOTest {
 		
 		assertNotNull(order);
 	}
+	
+	@Test
+	public void testListMostRecentSales() {
+		List<GameOrder> recentOrders = orderDAO.listMostRecentSales();
+		
+		assertEquals(3, recentOrders.size());
+	}
 }

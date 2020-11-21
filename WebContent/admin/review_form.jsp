@@ -59,7 +59,7 @@
 				<td colspan="2" align="center">
 					
 					<button type="submit">Save</button>&nbsp;&nbsp;
-					<button id="buttonCancel">Cancel</button>
+					<input type="button" id="buttonCancel" value="Cancel" />
 				</td>
 			</tr>
 		</table>

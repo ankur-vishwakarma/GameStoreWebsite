@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import com.gamestore.entity.Customer;
 import com.gamestore.entity.Game;
+import com.gamestore.entity.GameOrder;
 import com.gamestore.entity.Review;
 
 public class ReviewDAOTest {
@@ -117,6 +118,13 @@ public class ReviewDAOTest {
 		Review result = reviewDao.findByCustomerAndGame(customerId, gameId);
 		
 		assertNotNull(result);
+	}
+	
+	@Test
+	public void testListMostRecentReviews() {
+		List<Review> recentReviews = reviewDao.listMostRecentReview();
+		
+		assertEquals(3, recentReviews.size());
 	}
 
 }

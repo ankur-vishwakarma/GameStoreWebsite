@@ -58,5 +58,9 @@ public class OrderDAO extends JpaDAO<GameOrder> implements GenericDAO<GameOrder>
 		return super.findWithNamedQuery("GameOrder.findByCustomer", 
 				"customerId", customerId);
 	}
+	
+	public List<GameOrder> listMostRecentSales(){
+		return super.findWithNamedQuery("GameOrder.findAll", 0, 3);
+	}
 
 }
