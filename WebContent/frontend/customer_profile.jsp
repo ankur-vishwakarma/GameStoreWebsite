@@ -20,20 +20,32 @@
 				<td>${loggedCustomer.email}</td>
 			</tr>
 			<tr>
-				<td><b>Full Name:</b></td>
-				<td>${loggedCustomer.fullname}</td>
+				<td><b>First Name:</b></td>
+				<td>${loggedCustomer.firstname}</td>
+			</tr>
+			<tr>
+				<td><b>Last Name:</b></td>
+				<td>${loggedCustomer.lastname}</td>
 			</tr>
 			<tr>
 				<td><b>Phone no.:</b></td>
 				<td>${loggedCustomer.phone}</td>
 			</tr>
 			<tr>
-				<td><b>Address:</b></td>
-				<td>${loggedCustomer.address}</td>
+				<td><b>Address Line 1:</b></td>
+				<td>${loggedCustomer.addressLine1}</td>
+			</tr>
+			<tr>
+				<td><b>Address Line 2:</b></td>
+				<td>${loggedCustomer.addressLine2}</td>
 			</tr>
 			<tr>
 				<td><b>City:</b></td>
 				<td>${loggedCustomer.city}</td>
+			</tr>
+			<tr>
+				<td><b>State:</b></td>
+				<td>${loggedCustomer.state}</td>
 			</tr>
 			<tr>
 				<td><b>Zip Code:</b></td>
@@ -41,7 +53,7 @@
 			</tr>
 			<tr>
 				<td><b>Country:</b></td>
-				<td>${loggedCustomer.country}</td>
+				<td>${loggedCustomer.countryName}</td>
 			</tr>
 			<tr>
 				<td>&nbsp;</td>

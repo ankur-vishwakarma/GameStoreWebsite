@@ -38,9 +38,16 @@ public class OrderDAOTest {
 		customer.setCustomerId(2);
 		
 		order.setCustomer(customer);
-		order.setRecipientName("Atul Katiyar");
-		order.setRecipientPhone("1226527637");
-		order.setShippingAddress("H-38 Gujaini Kanpur");
+		order.setFirstname("Ankit");
+		order.setLastname("vis");
+		order.setPhone("78372837430");
+		order.setAddressLine1("H-38 Gujaini");
+		order.setAddressLine2("kanpur");
+		order.setCity("knp");
+		order.setState("UP");
+		order.setCountry("IN");
+		order.setPaymentMethod("paypal");
+		order.setZipcode("282763");
 		
 		Set<OrderDetail> orderDetails=new HashSet<>();
 		OrderDetail orderDetail=new OrderDetail();
@@ -54,6 +61,10 @@ public class OrderDAOTest {
 		orderDetails.add(orderDetail);
 		
 		order.setOrderDetails(orderDetails);
+		order.setTax(4.0f);
+		order.setShippingFee(6.0f);
+		order.setSubtotal(44.0f);
+		order.setTotal(50.0f);
 		
 		orderDAO.create(order);
 		
@@ -67,9 +78,9 @@ public class OrderDAOTest {
 		customer.setCustomerId(3);
 		
 		order.setCustomer(customer);
-		order.setRecipientName("Atul Katiyar");
-		order.setRecipientPhone("1226527637");
-		order.setShippingAddress("H-38 Gujaini Kanpur");
+		order.setFirstname("Atul Katiyar");
+		order.setPhone("1226527637");
+		order.setAddressLine1("H-38 Gujaini Kanpur");
 		
 		Set<OrderDetail> orderDetails=new HashSet<>();
 		
@@ -103,27 +114,27 @@ public class OrderDAOTest {
 	public void testUpdateGameOrderShippingAddress() {
 		Integer orderId=2;
 		GameOrder order=orderDAO.get(orderId);
-		order.setShippingAddress("New Address test");
+		order.setAddressLine1("New Address test");
 		
 		orderDAO.update(order);
 		
 		GameOrder updatedOrder= orderDAO.get(orderId);
 		
-		assertEquals(order.getShippingAddress(), updatedOrder.getShippingAddress());
+		assertEquals(order.getAddressLine1(), updatedOrder.getAddressLine1());
 	}
 	
 	@Test
 	public void testUpdateGameOrderDetail() {
-		Integer orderId=5;
+		Integer orderId=9;
 		GameOrder order=orderDAO.get(orderId);
 		
 		Iterator<OrderDetail> iterator=order.getOrderDetails().iterator();
 		
 		while(iterator.hasNext()) {
 			OrderDetail orderDetail= iterator.next();
-			if(orderDetail.getGame().getGameId()==15) {
+			if(orderDetail.getGame().getGameId()==2) {
 				orderDetail.setQuantity(3);
-				orderDetail.setSubtotal(45);
+				orderDetail.setSubtotal(60);
 			}
 		}
 		
@@ -134,13 +145,13 @@ public class OrderDAOTest {
 		iterator=order.getOrderDetails().iterator();
 		
 		int expectedQuantity=3;
-		float expectedSubtotal=45;
+		float expectedSubtotal=60;
 		int actualQuantity=0;
 		float actualSubtotal=0;
 		
 		while(iterator.hasNext()) {
 			OrderDetail orderDetail= iterator.next();
-			if(orderDetail.getGame().getGameId()==15) {
+			if(orderDetail.getGame().getGameId()==2) {
 				actualQuantity=orderDetail.getQuantity();
 				actualSubtotal=orderDetail.getSubtotal();
 			}
@@ -152,8 +163,10 @@ public class OrderDAOTest {
 
 	@Test
 	public void testGet() {
-		Integer orderId=2;
+		Integer orderId=9;
 		GameOrder order=orderDAO.get(orderId);
+		System.out.println(order.getFirstname());
+		System.out.println(order.getPaymentMethod());
 		
 		assertEquals(1, order.getOrderDetails().size());
 	}

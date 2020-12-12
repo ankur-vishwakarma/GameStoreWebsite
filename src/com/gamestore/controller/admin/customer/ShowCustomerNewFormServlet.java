@@ -1,8 +1,6 @@
-package com.gamestore.controller.frontend.customer;
+package com.gamestore.controller.admin.customer;
 
 import java.io.IOException;
-
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,18 +9,17 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.gamestore.service.CustomerServices;
 
-
-@WebServlet("/register")
-public class ShowCustomerRegisterFormServlet extends HttpServlet {
+@WebServlet("/admin/new_customer")
+public class ShowCustomerNewFormServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-
-    public ShowCustomerRegisterFormServlet() {
+    
+    public ShowCustomerNewFormServlet() {
         super();
     }
+    
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		CustomerServices customerServices=new CustomerServices(request, response);
-		customerServices.showCustomerRegistrationForm();
+		customerServices.newCustomer();
 	}
 
 }

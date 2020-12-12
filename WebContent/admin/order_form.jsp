@@ -28,6 +28,7 @@
 	<form action="update_order" method="post" id="orderForm">
 	<div align="center">
 		<table>
+			<h2>Order Overview:</h2>
 			<tr>
 				<td><b>Ordered By: </b></td>
 				<td>${order.customer.fullname}</td>
@@ -37,22 +38,11 @@
 				<td>${order.orderDate}</td>
 			</tr>
 			<tr>
-				<td><b>Recipient Name: </b></td>
-				<td><input type="text" name="recipientName" value="${order.recipientName}" size="45" /></td>
-			</tr>
-			<tr>
-				<td><b>Recipient Phone: </b></td>
-				<td><input type="text" name="recipientPhone" value="${order.recipientPhone}" size="45" /></td>
-			</tr>
-			<tr>
-				<td><b>Ship to: </b></td>
-				<td><input type="text" name="shippingAddress" value="${order.shippingAddress}" size="45" /></td>
-			</tr>
-			<tr>
 				<td><b>Payment Method: </b></td>
 				<td>
 					<select name="paymentMethod">
-						<option value="Cash On Delivery">Cash On Delivery</option>
+						<option value="Cash On Delivery" <c:if test="${order.paymentMethod eq 'Cash On Delivery'}">selected='selected'</c:if>>Cash On Delivery</option>
+						<option value="paypal" <c:if test="${order.paymentMethod eq 'paypal'}">selected='selected'</c:if>>Paypal or Credit Card</option>
 					</select>
         		</td>
 			</tr>
@@ -65,6 +55,52 @@
 						<option value="Delivered" <c:if test="${order.status eq 'Delivered'}">selected='selected'</c:if> >Delivered</option>
 						<option value="Completed" <c:if test="${order.status eq 'Completed'}">selected='selected'</c:if> >Completed</option>
 						<option value="Cancelled" <c:if test="${order.status eq 'Cancelled'}">selected='selected'</c:if> >Cancelled</option>
+					</select>
+				</td>
+			</tr>
+			</table>
+			<h2>Recipient Information</h2>
+			<table>
+			<tr>
+				<td><b>First Name: </b></td>
+				<td><input type="text" name="firstname" id="firstname" value="${order.firstname}" size="45" /></td>
+			</tr>
+			<tr>
+				<td><b>Last Name: </b></td>
+				<td><input type="text" name="lastname" id="lastname" value="${order.lastname}" size="45" /></td>
+			</tr>
+			<tr>
+				<td><b>Phone: </b></td>
+				<td><input type="text" name="phone" value="${order.phone}" size="45" /></td>
+			</tr>
+			<tr>
+				<td><b>Address Line 1: </b></td>
+				<td><input type="text" name="address1" id="address1" value="${order.addressLine1}" size="45" /></td>
+			</tr>
+			<tr>
+				<td><b>Address Line 2: </b></td>
+				<td><input type="text" name="address2" id="address2" value="${order.addressLine2}" size="45" /></td>
+			</tr>
+			<tr>
+				<td><b>City: </b></td>
+				<td><input type="text" name="city" value="${order.city}" size="45" /></td>
+			</tr>
+			<tr>
+				<td><b>State: </b></td>
+				<td><input type="text" name="state" value="${order.state}" size="45" /></td>
+			</tr>
+			<tr>
+				<td><b>Zipcode: </b></td>
+				<td><input type="text" name="zipcode" value="${order.zipcode}" size="45" /></td>
+			</tr>
+			<tr>
+				<td><b>Country:</b></td>
+				<td>
+					<select name="country" id="country">
+						<c:forEach items="${mapCountries}" var="country">
+							<option value="${country.value}"
+								<c:if test='${order.country eq country.value}'>selected='selected'</c:if>>${country.key}</option>
+						</c:forEach>
 					</select>
 				</td>
 			</tr>
@@ -101,10 +137,12 @@
 			</c:forEach>
 			
 			<tr>
-				<td colspan="4" align="right"><b><i>TOTAL:</i></b></td>
-				<td><b>${order.gameCopies}</b></td>
-				<td><b><fmt:formatNumber value="${order.total}" type="currency" /></b></td>
-				<td></td>
+				<td colspan="7" align="right">
+					<p>Subtotal: <fmt:formatNumber value="${order.subtotal}" type="currency" /></p>
+					<p>Tax: <input type="text" size="5" name="tax" id="tax" value="${order.tax}" /></p>
+					<p>Shipping Fee: <input type="text" size="5" name="shippingFee" id="shippingFee" value="${order.shippingFee}" /></p>
+					<p>Total: <fmt:formatNumber value="${order.total}" type="currency" /></p>
+				</td>
 			</tr>
 		</table>
 	</div>
@@ -135,9 +173,15 @@
 		$(document).ready(function(){
 			$("#orderForm").validate({
 				rules: {
-					recipientName: "required",
-					recipientPhone: "required",
-					shippingAddress: "required",
+					firstname: "required",
+					lastname: "required",
+					phone: "required",
+					address1: "required",
+					address2: "required",
+					city: "required",
+					state: "required",
+					zipcode: "required",
+					country: "required",
 					
 					<c:forEach items="${order.orderDetails}" var="game" varStatus="status">
 						quantity${status.index+1} : {
@@ -146,12 +190,21 @@
 							min: 1
 						},
 					</c:forEach>
+					
+					shippingFee: {required: true, number: true,min: 0},
+					tax: {required: true, number: true,min: 0},
 				},
 				
 				messages: {
-					recipientName: "Recipient name is required!",
-					recipientPhone: "Recipient Phone is required!",
-					shippingAddress: "Shipping Address is required!",
+					firstname: "First Name is required!",
+					lastname: "Last Name is required!",
+					phone: "Phone is required!",
+					address1: "Address Line 1 is required!",
+					address2: "Address Line 2 is required!",
+					city: "City is required!",
+					state: "State is required!",
+					zipcode: "zipcode is required!",
+					country: "Country is required!",
 					
 					<c:forEach items="${order.orderDetails}" var="game" varStatus="status">
 						quantity${status.index+1} : {
@@ -160,6 +213,17 @@
 							min: "Quantity must be greater than 0"
 						},
 					</c:forEach>
+						
+					shippingFee:{
+						required: "Please enter shipping fee",
+						number: "Shipping Fee must be a number",
+						min: "Shipping fee must be greater than equal to 0"
+					},
+					tax:{
+						required: "Please enter Tax",
+						number: "Tax must be a number",
+						min: "Tax must be greater than equal to 0"
+					}
 				}
 			});
 		});

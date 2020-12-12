@@ -77,9 +77,9 @@ public class OrderServices {
 		String shippingAddress = address + ", " + city + ", " + zipcode + ", " + country;
 		
 		GameOrder order=new GameOrder();
-		order.setRecipientName(recipientName);
-		order.setRecipientPhone(recipientPhone);
-		order.setShippingAddress(shippingAddress);
+		order.setFirstname(recipientName);
+		order.setPhone(recipientPhone);
+		order.setAddressLine1(shippingAddress);
 		order.setPaymentMethod(paymentMethod);
 		
 		HttpSession session=request.getSession();
@@ -162,6 +162,7 @@ public class OrderServices {
 			session.removeAttribute("NewGamePendingToAddToOrder");
 		}
 		
+		CommonUtility.generateCountryList(request);
 		
 		String editPage="order_form.jsp";
 		RequestDispatcher dispatcher=request.getRequestDispatcher(editPage);
@@ -173,15 +174,34 @@ public class OrderServices {
 		GameOrder order=(GameOrder) session.getAttribute("order");
 		
 		//general info
-		String recipientName=request.getParameter("recipientName");
-		String recipientPhone=request.getParameter("recipientPhone");
-		String shippingAddress=request.getParameter("shippingAddress");
+		String firstname=request.getParameter("firstname");
+		String lastname=request.getParameter("lastname");
+		String phone=request.getParameter("phone");
+		String address1=request.getParameter("address1");
+		String address2=request.getParameter("address2");
+		String city=request.getParameter("city");
+		String state=request.getParameter("state");
+		String country=request.getParameter("country");
+		String zipcode=request.getParameter("zipcode");
+		
+		float shippingFee=Float.parseFloat(request.getParameter("shippingFee"));
+		float tax=Float.parseFloat(request.getParameter("tax"));
+
+		
 		String paymentMethod=request.getParameter("paymentMethod");
 		String orderStatus=request.getParameter("orderStatus");
 		
-		order.setRecipientName(recipientName);
-		order.setRecipientPhone(recipientPhone);
-		order.setShippingAddress(shippingAddress);
+		order.setFirstname(firstname);
+		order.setLastname(lastname);
+		order.setPhone(phone);
+		order.setAddressLine1(address1);
+		order.setAddressLine2(address2);
+		order.setCity(city);
+		order.setState(state);
+		order.setCountry(country);
+		order.setZipcode(zipcode);
+		order.setShippingFee(shippingFee);
+		order.setTax(tax);
 		order.setPaymentMethod(paymentMethod);
 		order.setStatus(orderStatus);
 		
@@ -215,6 +235,10 @@ public class OrderServices {
 			
 			totalAmount+=subTotal;
 		}
+		
+		order.setSubtotal(totalAmount);
+		totalAmount += shippingFee;
+		totalAmount +=tax;
 		
 		order.setTotal(totalAmount);
 		

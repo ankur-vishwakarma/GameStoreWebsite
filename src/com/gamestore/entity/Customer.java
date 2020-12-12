@@ -3,6 +3,7 @@ package com.gamestore.entity;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 /**
@@ -23,20 +25,22 @@ import javax.persistence.UniqueConstraint;
  */
 @Entity
 @Table(name = "customer", catalog = "gamestoredb", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
-@NamedQueries({
-	@NamedQuery(name="Customer.findAll", query="SELECT c FROM Customer c ORDER BY c.registerDate DESC"),
-	@NamedQuery(name="Customer.findByEmail", query="SELECT c FROM Customer c WHERE c.email = :email"),
-	@NamedQuery(name="Customer.countAll", query="SELECT COUNT(c.email) FROM Customer c"),
-	@NamedQuery(name="Customer.checkLogin", query="SELECT c FROM Customer c WHERE c.email = :email AND c.password = :pass")
+@NamedQueries({ @NamedQuery(name = "Customer.findAll", query = "SELECT c FROM Customer c ORDER BY c.registerDate DESC"),
+		@NamedQuery(name = "Customer.findByEmail", query = "SELECT c FROM Customer c WHERE c.email = :email"),
+		@NamedQuery(name = "Customer.countAll", query = "SELECT COUNT(c.email) FROM Customer c"),
+		@NamedQuery(name = "Customer.checkLogin", query = "SELECT c FROM Customer c WHERE c.email = :email AND c.password = :pass")
 
 })
 public class Customer implements java.io.Serializable {
 
 	private int customerId;
 	private String email;
-	private String fullname;
-	private String address;
+	private String firstname;
+	private String lastname;
+	private String addressLine1;
+	private String addressLine2;
 	private String city;
+	private String state;
 	private String country;
 	private String phone;
 	private String customercol;
@@ -48,13 +52,16 @@ public class Customer implements java.io.Serializable {
 	public Customer() {
 	}
 
-	public Customer(int customerId, String email, String fullname, String address, String city, String country,
-			String phone, String customercol, String password, Date registerDate) {
+	public Customer(int customerId, String email, String firstname, String lastname, String address1, String address2,
+			String city, String state, String country, String phone, String customercol, String password, Date registerDate) {
 		this.customerId = customerId;
 		this.email = email;
-		this.fullname = fullname;
-		this.address = address;
+		this.firstname = firstname;
+		this.lastname = lastname;
+		this.addressLine1 = address1;
+		this.addressLine2 = address2;
 		this.city = city;
+		this.state = state;
 		this.country = country;
 		this.phone = phone;
 		this.customercol = customercol;
@@ -62,14 +69,19 @@ public class Customer implements java.io.Serializable {
 		this.registerDate = registerDate;
 	}
 
-	public Customer(int customerId, String email, String fullname, String address, String city, String country,
-			String phone, String customercol, String password, Date registerDate, Set<Review> reviews,
+	public Customer(int customerId, String email, String firstname, String lastname, 
+			String address1, String address2, String city, String state, String country,
+			String phone, String customercol, String password, 
+			Date registerDate, Set<Review> reviews,
 			Set<GameOrder> gameOrders) {
 		this.customerId = customerId;
 		this.email = email;
-		this.fullname = fullname;
-		this.address = address;
+		this.firstname = firstname;
+		this.lastname = lastname;
+		this.addressLine1 = address1;
+		this.addressLine2 = address2;
 		this.city = city;
+		this.state = state;
 		this.country = country;
 		this.phone = phone;
 		this.customercol = customercol;
@@ -81,7 +93,7 @@ public class Customer implements java.io.Serializable {
 
 	@Id
 	@Column(name = "customer_id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY )
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getCustomerId() {
 		return this.customerId;
 	}
@@ -99,22 +111,45 @@ public class Customer implements java.io.Serializable {
 		this.email = email;
 	}
 
-	@Column(name = "fullname", nullable = false, length = 30)
+	@Column(name = "firstname", nullable = false, length = 30)
+	public String getFirstname() {
+		return this.firstname;
+	}
+
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
+	
+	@Column(name = "lastname", nullable = false, length = 30)
+	public String getLastname() {
+		return this.lastname;
+	}
+
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
+	
+	@Transient
 	public String getFullname() {
-		return this.fullname;
+		return this.firstname + " " + this.lastname;
 	}
 
-	public void setFullname(String fullname) {
-		this.fullname = fullname;
+	@Column(name = "address_line1", nullable = false, length = 128)
+	public String getAddressLine1() {
+		return this.addressLine1;
 	}
 
-	@Column(name = "address", nullable = false, length = 128)
-	public String getAddress() {
-		return this.address;
+	public void setAddressLine1(String address1) {
+		this.addressLine1 = address1;
+	}
+	
+	@Column(name = "address_line2", nullable = false, length = 128)
+	public String getAddressLine2() {
+		return this.addressLine2;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
+	public void setAddressLine2(String address2) {
+		this.addressLine2 = address2;
 	}
 
 	@Column(name = "city", nullable = false, length = 32)
@@ -126,6 +161,15 @@ public class Customer implements java.io.Serializable {
 		this.city = city;
 	}
 
+	@Column(name = "state", nullable = false, length = 45)
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
 	@Column(name = "country", nullable = false, length = 64)
 	public String getCountry() {
 		return this.country;
@@ -133,6 +177,11 @@ public class Customer implements java.io.Serializable {
 
 	public void setCountry(String country) {
 		this.country = country;
+	}
+	
+	@Transient
+	public String getCountryName() {
+		return new Locale("",this.country).getDisplayCountry();
 	}
 
 	@Column(name = "phone", nullable = false, length = 15)

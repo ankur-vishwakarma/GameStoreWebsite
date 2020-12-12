@@ -75,7 +75,7 @@ public class ReviewDAOTest {
 		
 	    for(Review review : listReview) {
 	    	System.out.println(review.getReviewId()+ " "+ review.getGame().getTitle() 
-	    			+" " +review.getCustomer().getFullname()+" "+review.getHeadline());
+	    			+" " +review.getCustomer().getFirstname()+" "+review.getHeadline());
 	    }
 		
 		assertTrue(listReview.size()>0);
