@@ -60,26 +60,50 @@ public class OrderServices {
 	}
 
 	public void showCheckoutForm() throws ServletException, IOException {
+		HttpSession session=request.getSession();
+		ShoppingCart shoppingCart=(ShoppingCart) session.getAttribute("cart");
+		
+		//tax 10%
+		float tax=shoppingCart.getTotalAmount() * 0.1f;
+		
+		//shipping 10 RS per copy
+		float shippingFee = shoppingCart.getTotalQuantity() * 10.0f;
+		
+		float total = shoppingCart.getTotalAmount() +tax + shippingFee;
+		
+		session.setAttribute("tax", tax);
+		session.setAttribute("shippingFee", shippingFee);
+		session.setAttribute("total", total);
+		
+		CommonUtility.generateCountryList(request);
+		
 		String checkOutPage="frontend/checkout.jsp";
 		RequestDispatcher dispatcher=request.getRequestDispatcher(checkOutPage);
 		dispatcher.forward(request, response);
 	}
 
 	public void placeOrder() throws ServletException, IOException {
-		String recipientName=request.getParameter("recipientName");
-		String recipientPhone=request.getParameter("recipientPhone");
-		String address=request.getParameter("address");
+		String firstname=request.getParameter("firstname");
+		String lastname=request.getParameter("lastname");
+		String phone=request.getParameter("phone");
+		String address1 = request.getParameter("address1");
+		String address2 = request.getParameter("address2");
 		String city=request.getParameter("city");
+		String state=request.getParameter("state");
 		String zipcode=request.getParameter("zipcode");
 		String country=request.getParameter("country");
 		String paymentMethod=request.getParameter("paymentMethod");
 		
-		String shippingAddress = address + ", " + city + ", " + zipcode + ", " + country;
-		
 		GameOrder order=new GameOrder();
-		order.setFirstname(recipientName);
-		order.setPhone(recipientPhone);
-		order.setAddressLine1(shippingAddress);
+		order.setFirstname(firstname);
+		order.setLastname(lastname);
+		order.setPhone(phone);
+		order.setAddressLine1(address1);
+		order.setAddressLine2(address2);
+		order.setCity(city);
+		order.setState(state);
+		order.setCountry(country);
+		order.setZipcode(zipcode);
 		order.setPaymentMethod(paymentMethod);
 		
 		HttpSession session=request.getSession();
@@ -93,7 +117,7 @@ public class OrderServices {
 		
 		Set<OrderDetail> orderDetails=new HashSet<>();
 		
-		while(iterator.hasNext()) {
+		while (iterator.hasNext()) {
 			Game game=iterator.next();
 			Integer quantity=items.get(game);
 			float subtotal=quantity * game.getPrice();
@@ -108,7 +132,16 @@ public class OrderServices {
 		}
 		
 		order.setOrderDetails(orderDetails);
-		order.setTotal(shoppingCart.getTotalAmount());
+		
+		float tax=(Float) session.getAttribute("tax");
+		float shippingFee=(Float) session.getAttribute("shippingFee");
+		float total=(Float) session.getAttribute("total");
+
+		order.setSubtotal(shoppingCart.getTotalAmount());
+		order.setTax(tax);
+		order.setShippingFee(shippingFee);
+		order.setTotal(total);
+		
 		
 		orderDao.create(order);
 		
