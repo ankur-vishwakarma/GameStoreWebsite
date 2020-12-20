@@ -19,6 +19,9 @@ import com.gamestore.entity.Customer;
 import com.gamestore.entity.Game;
 import com.gamestore.entity.GameOrder;
 import com.gamestore.entity.OrderDetail;
+import com.paypal.api.payments.ItemList;
+import com.paypal.api.payments.Payment;
+import com.paypal.api.payments.ShippingAddress;
 
 public class OrderServices {
 	private OrderDAO orderDao;
@@ -83,6 +86,52 @@ public class OrderServices {
 	}
 
 	public void placeOrder() throws ServletException, IOException {
+		String paymentMethod=request.getParameter("paymentMethod");
+		GameOrder order=readOrderInfo();
+		
+		if(paymentMethod.equals("paypal")) {
+			PaymentServices paymentServices=new PaymentServices(request, response);
+			request.getSession().setAttribute("order4Paypal", order);
+			paymentServices.authorizePayment(order);
+		}else {  //COD
+			placeOrderCOD(order);
+		}
+		
+		
+	}
+	
+	public Integer placeOrderPaypal(Payment payment) {
+		GameOrder order = (GameOrder) request.getSession().getAttribute("order4Paypal");
+		ItemList itemList = payment.getTransactions().get(0).getItemList();
+		ShippingAddress shippingAddress = itemList.getShippingAddress();
+		String shippingPhoneNumber = itemList.getShippingPhoneNumber();
+		
+		String recipientName = shippingAddress.getRecipientName();
+		String [] names = recipientName.split(" ");
+		
+		order.setFirstname(names[0]);
+		order.setLastname(names[1]);
+		order.setAddressLine1(shippingAddress.getLine1());
+		order.setAddressLine2(shippingAddress.getLine2());
+		order.setCity(shippingAddress.getCity());
+		order.setState(shippingAddress.getState());
+		order.setCountry(shippingAddress.getCountryCode());
+		order.setPhone(shippingPhoneNumber);
+		
+		return saveOrder(order);
+	}
+	
+	private Integer saveOrder(GameOrder order) {
+		GameOrder savedOrder = orderDao.create(order);
+		
+		ShoppingCart shoppingCart=(ShoppingCart) request.getSession().getAttribute("cart");
+		shoppingCart.clear(); //clear cart as order placed
+		
+		return savedOrder.getOrderId();
+	}
+	
+	private GameOrder readOrderInfo() {
+		String paymentMethod=request.getParameter("paymentMethod");
 		String firstname=request.getParameter("firstname");
 		String lastname=request.getParameter("lastname");
 		String phone=request.getParameter("phone");
@@ -92,7 +141,7 @@ public class OrderServices {
 		String state=request.getParameter("state");
 		String zipcode=request.getParameter("zipcode");
 		String country=request.getParameter("country");
-		String paymentMethod=request.getParameter("paymentMethod");
+		
 		
 		GameOrder order=new GameOrder();
 		order.setFirstname(firstname);
@@ -142,10 +191,12 @@ public class OrderServices {
 		order.setShippingFee(shippingFee);
 		order.setTotal(total);
 		
+		return order;
+	}
+
+	private void placeOrderCOD(GameOrder order) throws ServletException, IOException {
 		
-		orderDao.create(order);
-		
-		shoppingCart.clear(); //clear cart as order placed
+		saveOrder(order);
 		
 		String message="Your order have been recieved. Thanks for shopping with GameStore.";
 		request.setAttribute("message", message);
@@ -153,6 +204,7 @@ public class OrderServices {
 		String messagePage="frontend/message.jsp";
 		RequestDispatcher dispatcher=request.getRequestDispatcher(messagePage);
 		dispatcher.forward(request, response);
+		
 	}
 
 	public void listOrderByCustomer() throws ServletException, IOException {

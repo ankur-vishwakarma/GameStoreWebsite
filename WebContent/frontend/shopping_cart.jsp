@@ -46,7 +46,7 @@
 							<tr>
 								<td>${status.index+1}</td>
 								<td>
-									<img src="data:image/jpg;base64,${item.key.base64Image}" width="128" hieght="164" />
+									<img src="data:image/jpg;base64,${item.key.base64Image}" width="128" height="164" />
 								</td>
 								<td>
 									<span id="game-title">${item.key.title}</span>
